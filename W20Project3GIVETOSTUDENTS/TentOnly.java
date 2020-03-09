@@ -5,6 +5,9 @@ import java.util.GregorianCalendar;
 
 public class TentOnly extends CampSite {
 
+    /**
+     * the amount of tents rented
+     */
     private int numberOfTenters;
 
     public TentOnly() {

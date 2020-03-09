@@ -7,8 +7,14 @@ import java.util.GregorianCalendar;
 
 public abstract class
 CampSite implements Serializable {
+    /**
+     * used to make sure loaded class corresponds to a serialized object
+     */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * protected means that these can be used in this class or any class in the package
+     */
     protected String guestName;
     protected GregorianCalendar checkIn;
     protected GregorianCalendar estimatedCheckOut;
