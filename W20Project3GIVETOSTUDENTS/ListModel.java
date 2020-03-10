@@ -62,6 +62,8 @@ public class ListModel extends AbstractTableModel {
 
                 break;
 
+            //case Over
+
             default:
                 throw new RuntimeException("upDate is in undefined state: " + display);
         }
@@ -172,6 +174,29 @@ public class ListModel extends AbstractTableModel {
                 throw new RuntimeException("Row,col out of range: " + row + " " + col);
         }
     }
+
+    private Object overDueScreen(int row, int col){
+        switch (col){
+            case 0:
+                return (fileredListCampSites.get(row).guestName);
+
+            case 1:
+                return (fileredListCampSites.
+                        get(row).getCost(fileredListCampSites.get(row).
+                        estimatedCheckOut));
+            case 2:
+                if (fileredListCampSites.get(row).estimatedCheckOut == null)
+                    return "-";
+
+                return (formatter.format(fileredListCampSites.get(row).estimatedCheckOut.
+                        getTime()));
+            case 3:
+
+            default:
+                throw new RuntimeException("Row,col out of range: " + row + " " + col);
+        }
+    }
+
 
     public void add(CampSite a) {
         listCampSites.add(a);
