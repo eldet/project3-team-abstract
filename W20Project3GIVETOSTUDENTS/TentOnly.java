@@ -32,7 +32,12 @@ public class TentOnly extends CampSite {
 
     @Override
     public double getCost(GregorianCalendar checkOut) {
-        double cost = 0;
+        double cost = 0.0;
+        if(numberOfTenters>10){
+            cost = 20*getDays(checkIn, checkOut);
+        }else {
+            cost = 10 * getDays(checkIn, checkOut);
+        }
         return cost;
     }
 

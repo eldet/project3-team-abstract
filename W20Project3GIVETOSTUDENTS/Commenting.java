@@ -8,4 +8,13 @@ public class Commenting {
      * I didn't do much just opened the code and added a couple comments but not really anything
      * more
      */
+
+
+    /**
+     * Complected cost functions for tent and rv.
+     *
+     * made getDays() in campsite - computes difference of days
+     */
 }
+
+

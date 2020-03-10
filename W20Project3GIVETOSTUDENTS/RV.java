@@ -25,7 +25,13 @@ private int power;
 
     @Override
     public double getCost(GregorianCalendar checkOut) {
-        double cost = 10;
+       double cost = 0.0;
+        if(power>1000){
+cost = 10+(30*getDays(checkIn, checkOut));
+        }else{
+            cost = 10+(20*getDays(checkIn, checkOut));
+        }
+
         return cost;
     }
 

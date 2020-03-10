@@ -1,8 +1,11 @@
 package W20Project3GIVETOSTUDENTS;
 
+import org.junit.FixMethodOrder;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public abstract class
@@ -33,6 +36,17 @@ CampSite implements Serializable {
         this.checkIn = checkIn;
         this.estimatedCheckOut = estimatedCheckOut;
         this.actualCheckOut = actualCheckOut;
+    }
+
+    public int getDays(GregorianCalendar checkIn,GregorianCalendar checkOut){
+       int days = 0;
+       Date d1 = checkOut.getTime();
+        Date d2 = checkIn.getTime();
+
+        long diff = d2.getTime() - d1.getTime();
+        days = (int)diff;
+        System.out.println("TESTING: "+days);
+        return days;
     }
 
     public String getGuestName() {
@@ -98,4 +112,5 @@ CampSite implements Serializable {
                 ", actualCheckOut=" + checkOutStr +
                 '}';
     }
+
 }
