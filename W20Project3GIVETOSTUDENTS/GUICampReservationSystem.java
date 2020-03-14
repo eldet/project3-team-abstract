@@ -133,6 +133,12 @@ public class GUICampReservationSystem extends JFrame implements ActionListener{
         if (checkOUtItemScn == comp)
             DList.setDisplay(ScreenDisplay.CheckOutGuest);
 
+        if (overDueItemScn == comp)
+            DList.setDisplay(ScreenDisplay.OverDue);
+
+        if (sortRvTentItemScn == comp)
+            DList.setDisplay(ScreenDisplay.SortRVTent);
+
         if (openSerItem == comp || openTextItem == comp) {
             JFileChooser chooser = new JFileChooser();
             int status = chooser.showOpenDialog(null);
@@ -143,7 +149,7 @@ public class GUICampReservationSystem extends JFrame implements ActionListener{
             }
         }
 
-        if (saveSerItem == comp || saveTextItem == comp) {
+        if (saveSerItem == comp || openSerItem == comp) {
             JFileChooser chooser = new JFileChooser();
             int status = chooser.showSaveDialog(null);
             if (status == JFileChooser.APPROVE_OPTION) {

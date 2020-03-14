@@ -14,6 +14,12 @@ public class Commenting {
      * Complected cost functions for tent and rv.
      *
      * made getDays() in campsite - computes difference of days
+     *
+     * Made the overdue screen sort based on days overdue, given a date to compare to, and used collection
+     * streaming/filtering/sorting. (Lambdas)
+     * Made the sortRVTent screen sort the RV's based on guest name, then the tents based on guest name, and
+     * merged the two sorted arraylists using ArrayList.addAll method.
+     *
      */
 }
 

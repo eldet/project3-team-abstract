@@ -1,15 +1,12 @@
 package W20Project3GIVETOSTUDENTS;
 
-import org.junit.FixMethodOrder;
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.temporal.ChronoUnit;
 import java.util.GregorianCalendar;
 
-public abstract class
-CampSite implements Serializable {
+public abstract class CampSite implements Serializable {
     /**
      * used to make sure loaded class corresponds to a serialized object
      */
@@ -39,14 +36,7 @@ CampSite implements Serializable {
     }
 
     public int getDays(GregorianCalendar checkIn,GregorianCalendar checkOut){
-       int days = 0;
-       Date d1 = checkOut.getTime();
-        Date d2 = checkIn.getTime();
-
-        long diff = d2.getTime() - d1.getTime();
-        days = (int)diff;
-        System.out.println("TESTING: "+days);
-        return days;
+        return (int) ChronoUnit.DAYS.between(checkIn.toInstant(), checkOut.toInstant());
     }
 
     public String getGuestName() {
@@ -113,4 +103,28 @@ CampSite implements Serializable {
                 '}';
     }
 
+//    public static CampSite parseCampsite(String is) {
+//        try {
+//            String parsable = is.substring(is.indexOf("{") + 1, is.length() - 1);
+//            String[] vals = parsable.split(", ");
+//
+//            String gn = vals[0].substring(vals[0].indexOf("\'") + 1, vals[0].length() - 1);
+//
+//            Date tempdate = DateFormat.getDateInstance(DateFormat.SHORT).parse(vals[1].substring(vals[1].indexOf("=")+1));
+//            GregorianCalendar ci = new GregorianCalendar();
+//            ci.setTime(tempdate);
+//
+//            tempdate = DateFormat.getDateInstance(DateFormat.SHORT).parse(vals[2].substring(vals[2].indexOf("=")+1));
+//            GregorianCalendar eco = new GregorianCalendar();
+//            eco.setTime(tempdate);
+//
+//            tempdate = DateFormat.getDateInstance(DateFormat.SHORT).parse(vals[2].substring(vals[2].indexOf("=")+1));
+//            GregorianCalendar aco = new GregorianCalendar();
+//            aco.setTime(tempdate);
+//
+//            return new CampSite(gn, ci, eco, aco);
+//        } catch (Exception ex) {
+//            return new CampSite();
+//        }
+//    }
 }

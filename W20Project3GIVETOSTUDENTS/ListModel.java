@@ -1,8 +1,10 @@
 package W20Project3GIVETOSTUDENTS;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.io.*;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 import static W20Project3GIVETOSTUDENTS.ScreenDisplay.CurrentParkStatus;
 
 public class ListModel extends AbstractTableModel {
+    GregorianCalendar compareToDate = new GregorianCalendar();
+
     private ArrayList<CampSite> listCampSites;
     private ArrayList<CampSite> fileredListCampSites;
 
@@ -21,6 +25,8 @@ public class ListModel extends AbstractTableModel {
 
     private String[] columnNamesforCheckouts = {"Guest Name", "Est. Cost",
             "Check in Date", "ACTUAL Check out Date ", " Real Cost"};
+
+    private String[] columnNamesforOverdue = {"Guest Name", "Est. Cost", "Est. Checkout Date", "Days Overdue"};
 
     private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
     private String date;
@@ -59,7 +65,41 @@ public class ListModel extends AbstractTableModel {
                         return n1.getGuestName().compareTo(n2.guestName);
                     }
                 });
+                break;
+            case OverDue:
+                try {
+                    String ui = JOptionPane.showInputDialog("Enter date. (e.g., 01/20/2020)");
+                    if (ui == null) {
+                        setDisplay(CurrentParkStatus);
+                        return;
+                    }
+                    Date temp = DateFormat.getDateInstance(DateFormat.SHORT).parse(ui);
+                    compareToDate.setTime(temp);
 
+                    fileredListCampSites.clear();
+                    fileredListCampSites = (ArrayList<CampSite>)listCampSites
+                            .stream()
+                            .filter(cs -> cs.getEstimatedCheckOut().before(compareToDate))
+                            .sorted(Comparator.comparing(CampSite::getEstimatedCheckOut))
+                            .collect(Collectors.toList());
+                } catch (Exception ex) {
+                    throw new RuntimeException("Error parsing date.");
+                }
+                break;
+            case SortRVTent:
+                fileredListCampSites.clear();
+                ArrayList<CampSite> temp = new ArrayList<>();
+                fileredListCampSites = (ArrayList<CampSite>)listCampSites
+                        .stream()
+                        .filter(cs -> cs instanceof RV)
+                        .sorted(Comparator.comparing(CampSite::getGuestName))
+                        .collect(Collectors.toList());
+                temp = (ArrayList<CampSite>)listCampSites
+                        .stream()
+                        .filter(cs -> cs instanceof TentOnly)
+                        .sorted(Comparator.comparing(CampSite::getGuestName))
+                        .collect(Collectors.toList());
+                fileredListCampSites.addAll(temp);
                 break;
 
             //case Over
@@ -77,6 +117,10 @@ public class ListModel extends AbstractTableModel {
                 return columnNamesCurrentPark[col];
             case CheckOutGuest:
                 return columnNamesforCheckouts[col];
+            case OverDue:
+                return columnNamesforOverdue[col];
+            case SortRVTent:
+                return columnNamesCurrentPark[col];
         }
         throw new RuntimeException("Undefined state for Col Names: " + display);
     }
@@ -88,6 +132,10 @@ public class ListModel extends AbstractTableModel {
                 return columnNamesCurrentPark.length;
             case CheckOutGuest:
                 return columnNamesforCheckouts.length;
+            case OverDue:
+                return columnNamesforOverdue.length;
+            case SortRVTent:
+                return columnNamesCurrentPark.length;
         }
         throw new IllegalArgumentException();
     }
@@ -104,18 +152,23 @@ public class ListModel extends AbstractTableModel {
                 return currentParkScreen(row, col);
             case CheckOutGuest:
                 return checkOutScreen(row, col);
+            case OverDue:
+                return overDueScreen(row, col);
+            case SortRVTent:
+                return currentParkScreen(row, col);
           }
         throw new IllegalArgumentException();
     }
 
     private Object currentParkScreen(int row, int col) {
+        DecimalFormat df = new DecimalFormat("$###,###.00");
         switch (col) {
             case 0:
                 return (fileredListCampSites.get(row).guestName);
 
             case 1:
-                return (fileredListCampSites.get(row).getCost(fileredListCampSites.
-                        get(row).estimatedCheckOut));
+                return (df.format(fileredListCampSites.get(row).getCost(fileredListCampSites.
+                        get(row).estimatedCheckOut)));
 
             case 2:
                 return (formatter.format(fileredListCampSites.get(row).checkIn.getTime()));
@@ -191,6 +244,10 @@ public class ListModel extends AbstractTableModel {
                 return (formatter.format(fileredListCampSites.get(row).estimatedCheckOut.
                         getTime()));
             case 3:
+                return (fileredListCampSites.get(row).getDays(
+                        fileredListCampSites.get(row).getEstimatedCheckOut(),
+                        compareToDate
+                ));
 
             default:
                 throw new RuntimeException("Row,col out of range: " + row + " " + col);
@@ -238,6 +295,32 @@ public class ListModel extends AbstractTableModel {
 
         }
     }
+
+//    public void saveTextDatabase(String filename) {
+//        try {
+//            PrintWriter pw = new PrintWriter(new FileOutputStream(filename, false));
+//            for (CampSite cs : this.listCampSites) {
+//                pw.println(cs.toString());
+//            }
+//            pw.close();
+//        } catch (Exception ex) {
+//            throw new RuntimeException("Text saving problem! " + display);
+//        }
+//    }
+//
+//    public void loadTextDatabase(String filename) {
+//        try {
+//            this.listCampSites.clear();
+//            Scanner sc = new Scanner(new File(filename));
+//            while (sc.hasNextLine()) {
+//                this.listCampSites.add(CampSite.parseCampsite(sc.nextLine()));
+//            }
+//            sc.close();
+//        } catch (Exception ex) {
+//            throw new RuntimeException("Text loading problem! " + display);
+//        }
+//        fireTableDataChanged();
+//    }
 
     public void createList() {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -291,4 +374,7 @@ public class ListModel extends AbstractTableModel {
         }
     }
 }
+
+
+//I need help with a save and load function. What is your email so I can send you our project? Like the doc/instructuons for it?
 
